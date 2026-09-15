@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Badge, buttonStyles, Card, EmptyState, inputStyles } from "@/components/ui";
+import { apiFetch, apiSend } from "@/lib/api";
 import { COURSES, type Course } from "@/lib/types";
 
 type LessonRow = {
@@ -32,9 +33,7 @@ export default function StudioPage() {
 
   const load = async () => {
     try {
-      const res = await fetch("/api/lessons", { cache: "no-store" });
-      const body = await res.json();
-      if (!res.ok) throw new Error(body.error ?? "Failed to load lessons");
+      const body = await apiFetch<{ lessons: LessonRow[] }>("/api/lessons");
       setLessons(body.lessons);
       setError(null);
     } catch (err) {
@@ -53,14 +52,7 @@ export default function StudioPage() {
     setError(null);
 
     try {
-      const res = await fetch("/api/lessons", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ title, course, skill }),
-      });
-      const body = await res.json();
-      if (!res.ok) throw new Error(body.error ?? "Failed to create lesson");
-
+      await apiSend("/api/lessons", "POST", { title, course, skill });
       setTitle("");
       await load();
     } catch (err) {

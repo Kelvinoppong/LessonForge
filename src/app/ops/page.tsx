@@ -13,6 +13,7 @@ import {
   YAxis,
 } from "recharts";
 import { Badge, buttonStyles, Card, EmptyState, inputStyles, Stat } from "@/components/ui";
+import { apiFetch, apiSend } from "@/lib/api";
 
 type VariantStats = {
   sessions: number;
@@ -75,15 +76,17 @@ export default function OpsPage() {
   const [running, setRunning] = useState(false);
 
   const load = useCallback(async () => {
-    const [overviewRes, lessonsRes] = await Promise.all([
-      fetch("/api/ops/overview", { cache: "no-store" }),
-      fetch("/api/lessons", { cache: "no-store" }),
-    ]);
+    try {
+      const [overview, lessonList] = await Promise.all([
+        apiFetch<Overview>("/api/ops/overview"),
+        apiFetch<{ lessons: LessonOption[] }>("/api/lessons"),
+      ]);
 
-    if (overviewRes.ok) setData(await overviewRes.json());
-    if (lessonsRes.ok) {
-      const body = await lessonsRes.json();
-      setLessons(body.lessons.filter((l: LessonOption) => l.variantCount >= 2));
+      setData(overview);
+      setLessons(lessonList.lessons.filter((l) => l.variantCount >= 2));
+    } catch (err) {
+      setNotice({ tone: "bad", text: (err as Error).message });
+      setData((current) => current ?? { window: 24, experiments: [], series: [], recentChecks: [] });
     }
   }, []);
 
@@ -94,17 +97,15 @@ export default function OpsPage() {
   }, [load]);
 
   const setStatus = async (id: string, status: "running" | "halted") => {
-    const res = await fetch("/api/experiments", {
-      method: "PATCH",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ id, status }),
-    });
-    const body = await res.json();
-    setNotice(
-      res.ok
-        ? { tone: "good", text: status === "halted" ? "Experiment halted." : "Experiment resumed." }
-        : { tone: "bad", text: body.error ?? "Update failed" },
-    );
+    try {
+      await apiSend("/api/experiments", "PATCH", { id, status });
+      setNotice({
+        tone: "good",
+        text: status === "halted" ? "Experiment halted." : "Experiment resumed.",
+      });
+    } catch (err) {
+      setNotice({ tone: "bad", text: (err as Error).message });
+    }
     await load();
   };
 
@@ -112,17 +113,16 @@ export default function OpsPage() {
   const runHealthCheck = async () => {
     setRunning(true);
     try {
-      const res = await fetch("/api/cron/experiment-health", { cache: "no-store" });
-      const body = await res.json();
-      setNotice(
-        res.ok
-          ? {
-              tone: "good",
-              text: `Evaluated ${body.evaluated} experiment(s); halted ${body.halted}.`,
-            }
-          : { tone: "bad", text: body.error ?? "Health check failed" },
+      const body = await apiFetch<{ evaluated: number; halted: number }>(
+        "/api/cron/experiment-health",
       );
+      setNotice({
+        tone: "good",
+        text: `Evaluated ${body.evaluated} experiment(s); halted ${body.halted}.`,
+      });
       await load();
+    } catch (err) {
+      setNotice({ tone: "bad", text: (err as Error).message });
     } finally {
       setRunning(false);
     }
@@ -432,21 +432,20 @@ function NewExperiment({
     setSubmitting(true);
 
     try {
-      const res = await fetch("/api/experiments", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ lessonId, name, key, trafficSplit, minSessions }),
+      const body = await apiSend<{ experiment: { key: string } }>("/api/experiments", "POST", {
+        lessonId,
+        name,
+        key,
+        trafficSplit,
+        minSessions,
       });
-      const body = await res.json();
 
-      if (!res.ok) {
-        onError({ tone: "bad", text: body.error ?? "Could not create experiment" });
-      } else {
-        onError({ tone: "good", text: `Experiment "${body.experiment.key}" is running.` });
-        setName("");
-        setKey("");
-      }
+      onError({ tone: "good", text: `Experiment "${body.experiment.key}" is running.` });
+      setName("");
+      setKey("");
       await onCreated();
+    } catch (err) {
+      onError({ tone: "bad", text: (err as Error).message });
     } finally {
       setSubmitting(false);
     }

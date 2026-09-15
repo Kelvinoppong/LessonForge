@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ExercisePreview } from "@/components/ExercisePreview";
 import { Badge, buttonStyles, Card, inputStyles } from "@/components/ui";
+import { apiFetch, apiSend } from "@/lib/api";
 import type { Exercise } from "@/lib/types";
 
 type Lesson = {
@@ -49,10 +50,12 @@ export default function AuthoringPage() {
   const [notice, setNotice] = useState<{ tone: "good" | "bad"; text: string } | null>(null);
 
   const load = useCallback(async () => {
-    const res = await fetch(`/api/lessons/${id}`, { cache: "no-store" });
-    const body = await res.json();
-    if (!res.ok) {
-      setNotice({ tone: "bad", text: body.error ?? "Failed to load lesson" });
+    let body: { lesson: Lesson; variants: Variant[]; messages: Message[] };
+
+    try {
+      body = await apiFetch(`/api/lessons/${id}`);
+    } catch (err) {
+      setNotice({ tone: "bad", text: (err as Error).message });
       return;
     }
 
@@ -80,28 +83,18 @@ export default function AuthoringPage() {
     setNotice(null);
 
     try {
-      const res = await fetch(`/api/lessons/${id}/draft`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          instruction,
-          currentExercises: canvas ?? undefined,
-        }),
-      });
-      const body = await res.json();
-
-      if (!res.ok) {
-        setNotice({ tone: "bad", text: body.detail ?? body.error ?? "Draft failed" });
-      } else {
-        setCanvas(body.exercises);
-      }
-
+      const body = await apiSend<{ exercises: Exercise[] }>(
+        `/api/lessons/${id}/draft`,
+        "POST",
+        { instruction, currentExercises: canvas ?? undefined },
+      );
+      setCanvas(body.exercises);
       setInstruction("");
-      await load();
     } catch (err) {
       setNotice({ tone: "bad", text: (err as Error).message });
     } finally {
       setDrafting(false);
+      await load();
     }
   };
 
@@ -111,49 +104,39 @@ export default function AuthoringPage() {
     setNotice(null);
 
     try {
-      const res = await fetch(`/api/lessons/${id}/variants`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          label: variantLabel,
-          exercises: canvas,
-          authoredBy: "gpt-4o",
-        }),
+      const body = await apiSend<{
+        variant: { label: string };
+        audioGenerated: number;
+        warnings?: string[];
+      }>(`/api/lessons/${id}/variants`, "POST", {
+        label: variantLabel,
+        exercises: canvas,
+        authoredBy: "gpt-4o",
       });
-      const body = await res.json();
 
-      if (!res.ok) {
-        setNotice({ tone: "bad", text: body.error ?? "Could not accept variant" });
-      } else {
-        const audioNote =
-          body.audioGenerated > 0 ? ` Generated ${body.audioGenerated} audio clip(s).` : "";
-        const warnings = body.warnings?.length ? ` ${body.warnings.join(" ")}` : "";
-        setNotice({
-          tone: "good",
-          text: `Accepted as "${body.variant.label}".${audioNote}${warnings}`,
-        });
-        setCanvas(null);
-      }
-      await load();
+      const audioNote =
+        body.audioGenerated > 0 ? ` Generated ${body.audioGenerated} audio clip(s).` : "";
+      const warnings = body.warnings?.length ? ` ${body.warnings.join(" ")}` : "";
+      setNotice({
+        tone: "good",
+        text: `Accepted as "${body.variant.label}".${audioNote}${warnings}`,
+      });
+      setCanvas(null);
     } catch (err) {
       setNotice({ tone: "bad", text: (err as Error).message });
     } finally {
       setAccepting(false);
+      await load();
     }
   };
 
   const publish = async () => {
-    const res = await fetch(`/api/lessons/${id}`, {
-      method: "PATCH",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ status: "published" }),
-    });
-    const body = await res.json();
-    setNotice(
-      res.ok
-        ? { tone: "good", text: "Lesson published." }
-        : { tone: "bad", text: body.error ?? "Publish failed" },
-    );
+    try {
+      await apiSend(`/api/lessons/${id}`, "PATCH", { status: "published" });
+      setNotice({ tone: "good", text: "Lesson published." });
+    } catch (err) {
+      setNotice({ tone: "bad", text: (err as Error).message });
+    }
     await load();
   };
 

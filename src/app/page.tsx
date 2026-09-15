@@ -37,13 +37,19 @@ export default function HomePage() {
         </p>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/studio" className={buttonStyles.primary}>
+          <Link href="/demo" className={buttonStyles.primary}>
+            Try a lesson
+          </Link>
+          <Link href="/studio" className={buttonStyles.secondary}>
             Open the Studio
           </Link>
           <Link href="/ops" className={buttonStyles.secondary}>
             Reliability dashboard
           </Link>
         </div>
+        <p className="mt-3 text-xs text-ink-400">
+          The demo runs without a database or API key.
+        </p>
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2">

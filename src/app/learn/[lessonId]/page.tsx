@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { ExercisePlayer } from "@/components/ExercisePlayer";
 import { buttonStyles, EmptyState } from "@/components/ui";
+import { apiFetch } from "@/lib/api";
 import { getLearnerId, Telemetry } from "@/lib/learner";
 import type { Exercise } from "@/lib/types";
 
@@ -32,18 +33,10 @@ export default function LearnPage() {
 
     (async () => {
       try {
-        const res = await fetch(
+        const body = await apiFetch<AssignResponse>(
           `/api/assign?lessonId=${encodeURIComponent(lessonId)}&learnerId=${encodeURIComponent(learnerId)}`,
-          { cache: "no-store" },
         );
-        const body = await res.json();
-        if (cancelled) return;
-
-        if (!res.ok) {
-          setError(body.error ?? "Could not load this lesson.");
-          return;
-        }
-        setData(body as AssignResponse);
+        if (!cancelled) setData(body);
       } catch (err) {
         if (!cancelled) setError((err as Error).message);
       }

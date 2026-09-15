@@ -32,6 +32,26 @@ type Context = {
   experimentId?: string | null;
 };
 
+export type LearnerEvent = Omit<
+  TelemetryEvent,
+  "learnerId" | "lessonId" | "variantId" | "experimentId"
+>;
+
+/**
+ * What the player needs from telemetry. An interface rather than the concrete
+ * class so the offline demo can run the real player against a sink that discards
+ * events instead of posting them.
+ */
+export interface TelemetrySink {
+  record(event: LearnerEvent): void;
+  flush(): Promise<void>;
+}
+
+export class NoopTelemetry implements TelemetrySink {
+  record(): void {}
+  async flush(): Promise<void> {}
+}
+
 /**
  * Batching telemetry client.
  *
@@ -40,7 +60,7 @@ type Context = {
  * keystroke would be wasteful. Errors are flushed immediately — those are the
  * events the monitor acts on.
  */
-export class Telemetry {
+export class Telemetry implements TelemetrySink {
   private buffer: TelemetryEvent[] = [];
   private timer: ReturnType<typeof setTimeout> | null = null;
 
@@ -54,9 +74,7 @@ export class Telemetry {
     }
   }
 
-  record(
-    event: Omit<TelemetryEvent, "learnerId" | "lessonId" | "variantId" | "experimentId">,
-  ): void {
+  record(event: LearnerEvent): void {
     this.buffer.push({ ...this.context, ...event });
 
     const urgent = event.type === "client_error" || event.type === "audio_error";

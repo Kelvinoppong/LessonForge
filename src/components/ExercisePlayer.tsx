@@ -4,13 +4,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { CoordinatePlane } from "@/components/CoordinatePlane";
 import { Badge, buttonStyles, inputStyles } from "@/components/ui";
-import { normalizeAnswer, Telemetry } from "@/lib/learner";
+import { normalizeAnswer, type TelemetrySink } from "@/lib/learner";
 import type { Exercise, Point } from "@/lib/types";
 
 type Props = {
   lessonTitle: string;
   exercises: Exercise[];
-  telemetry: Telemetry;
+  telemetry: TelemetrySink;
   variantLabel: string;
 };
 
