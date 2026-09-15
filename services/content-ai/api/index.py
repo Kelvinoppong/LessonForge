@@ -12,6 +12,7 @@ import logging
 import os
 import secrets
 import time
+from typing import Optional
 
 from fastapi import Depends, FastAPI, HTTPException, Request
 from openai import OpenAI, OpenAIError
@@ -29,7 +30,7 @@ MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o")
 TTS_MODEL = os.environ.get("OPENAI_TTS_MODEL", "gpt-4o-mini-tts")
 EXPECTED_TOKEN = os.environ.get("CONTENT_AI_TOKEN", "")
 
-_client: OpenAI | None = None
+_client: Optional[OpenAI] = None
 
 
 def client() -> OpenAI:
@@ -81,7 +82,7 @@ def draft(req: DraftRequest) -> dict[str, object]:
         messages.append({"role": turn.role, "content": turn.content})
     messages.append({"role": "user", "content": user_prompt(req)})
 
-    last_error: str | None = None
+    last_error: Optional[str] = None
 
     for attempt in range(2):
         if last_error:

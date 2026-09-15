@@ -5,7 +5,7 @@ everything it receives, so this file is the service's own guarantee that it neve
 emits a shape the platform can't render.
 """
 
-from typing import Annotated, Literal, Union
+from typing import Annotated, Literal, Optional, Union
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -21,7 +21,7 @@ class CoordinatePlotExercise(BaseModel):
     target: Point
     gridRange: int = Field(default=10, ge=4, le=20)
     tolerance: float = Field(default=0.4, ge=0.1, le=1.0)
-    hint: str | None = None
+    hint: Optional[str] = None
 
     @model_validator(mode="after")
     def target_inside_grid(self) -> "CoordinatePlotExercise":
@@ -40,7 +40,7 @@ class CoordinateReadExercise(BaseModel):
     gridRange: int = Field(default=10, ge=4, le=20)
     choices: list[str] = Field(min_length=2, max_length=6)
     answerIndex: int = Field(ge=0)
-    hint: str | None = None
+    hint: Optional[str] = None
 
     @model_validator(mode="after")
     def answer_in_range(self) -> "CoordinateReadExercise":
@@ -60,7 +60,7 @@ class ListeningChoiceExercise(BaseModel):
     audioText: str = Field(min_length=1)
     choices: list[str] = Field(min_length=2, max_length=6)
     answerIndex: int = Field(ge=0)
-    transcript: str | None = None
+    transcript: Optional[str] = None
 
     @model_validator(mode="after")
     def answer_in_range(self) -> "ListeningChoiceExercise":
@@ -77,7 +77,7 @@ class ListeningTypeExercise(BaseModel):
     prompt: str = Field(min_length=1)
     audioText: str = Field(min_length=1)
     accepted: list[str] = Field(min_length=1, max_length=8)
-    transcript: str | None = None
+    transcript: Optional[str] = None
 
     @field_validator("accepted")
     @classmethod
@@ -116,7 +116,7 @@ class DraftRequest(BaseModel):
     skill: str = Field(min_length=1, max_length=120)
     instruction: str = Field(min_length=1, max_length=2000)
     history: list[HistoryTurn] = Field(default_factory=list, max_length=20)
-    currentExercises: list[Exercise] | None = None
+    currentExercises: Optional[list[Exercise]] = None
 
 
 class SpeechRequest(BaseModel):

@@ -1,19 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { assignments, experiments, lessonVariants } from "@/db/schema";
-
-/**
- * FNV-1a. Deterministic and stable across processes, which matters: a learner
- * must land in the same bucket on every request even if no row exists yet.
- */
-function hashToBucket(seed: string): number {
-  let hash = 0x811c9dc5;
-  for (let i = 0; i < seed.length; i++) {
-    hash ^= seed.charCodeAt(i);
-    hash = Math.imul(hash, 0x01000193);
-  }
-  return (hash >>> 0) % 100;
-}
+import { inCandidateGroup } from "@/lib/bucketing";
 
 export type Assignment = {
   variantId: string;
@@ -91,8 +79,9 @@ export async function resolveVariant(
     };
   }
 
-  const bucket = hashToBucket(`${experiment.key}:${learnerId}`);
-  const chosen = bucket < experiment.trafficSplit ? candidate : control;
+  const chosen = inCandidateGroup(experiment.key, learnerId, experiment.trafficSplit)
+    ? candidate
+    : control;
 
   await db
     .insert(assignments)
@@ -107,5 +96,3 @@ export async function resolveVariant(
     reason: "bucketed",
   };
 }
-
-export const __testing = { hashToBucket };
