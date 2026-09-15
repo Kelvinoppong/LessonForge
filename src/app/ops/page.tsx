@@ -74,6 +74,8 @@ export default function OpsPage() {
   const [lessons, setLessons] = useState<LessonOption[]>([]);
   const [notice, setNotice] = useState<{ tone: "good" | "bad"; text: string } | null>(null);
   const [running, setRunning] = useState(false);
+  /** Distinguishes "loaded, and there's nothing" from "couldn't load at all". */
+  const [loadFailed, setLoadFailed] = useState(false);
 
   const load = useCallback(async () => {
     try {
@@ -84,9 +86,11 @@ export default function OpsPage() {
 
       setData(overview);
       setLessons(lessonList.lessons.filter((l) => l.variantCount >= 2));
+      setLoadFailed(false);
     } catch (err) {
       setNotice({ tone: "bad", text: (err as Error).message });
       setData((current) => current ?? { window: 24, experiments: [], series: [], recentChecks: [] });
+      setLoadFailed(true);
     }
   }, []);
 
@@ -171,15 +175,17 @@ export default function OpsPage() {
       {data === null ? (
         <div className="h-48 animate-pulse rounded-lg bg-ink-900/70" />
       ) : data.experiments.length === 0 ? (
-        <EmptyState
-          title="No experiments yet"
-          body="Accept at least two variants on a lesson in the Studio, then start an experiment above to begin routing traffic."
-          action={
-            <Link href="/studio" className={buttonStyles.secondary}>
-              Go to Studio
-            </Link>
-          }
-        />
+        loadFailed ? null : (
+          <EmptyState
+            title="No experiments yet"
+            body="Accept at least two variants on a lesson in the Studio, then start an experiment above to begin routing traffic."
+            action={
+              <Link href="/studio" className={buttonStyles.secondary}>
+                Go to Studio
+              </Link>
+            }
+          />
+        )
       ) : (
         <div className="space-y-5">
           {data.experiments.map((experiment) => {

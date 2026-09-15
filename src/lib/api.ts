@@ -25,6 +25,7 @@ function messageForStatus(status: number): string {
   }
   if (status === 404) return "Not found.";
   if (status === 401 || status === 403) return "Not authorised.";
+  if (status === 503) return "The service is unavailable — it may not be configured yet.";
   if (status === 504) return "The request timed out.";
   return `Request failed with status ${status}.`;
 }

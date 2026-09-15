@@ -128,10 +128,14 @@ export default function StudioPage() {
           ))}
         </div>
       ) : lessons.length === 0 ? (
-        <EmptyState
-          title="No lessons yet"
-          body="Create your first lesson above, then draft its exercises with the content service."
-        />
+        // Suppressed when the load failed: "no lessons yet" would be a claim we
+        // can't actually make, since we never managed to read them.
+        error ? null : (
+          <EmptyState
+            title="No lessons yet"
+            body="Create your first lesson above, then draft its exercises with the content service."
+          />
+        )
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {lessons.map((lesson) => (
