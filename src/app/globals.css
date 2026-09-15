@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink-950: #0b1020;
+  --color-ink-900: #111827;
+  --color-ink-800: #1b2436;
+  --color-ink-700: #2a3550;
+  --color-ink-400: #8a97b1;
+  --color-ink-200: #d8dfec;
+
+  --color-grass-500: #58cc02;
+  --color-grass-600: #46a302;
+  --color-grass-300: #9ae66e;
+
+  --color-macaw-500: #1cb0f6;
+  --color-macaw-600: #1497d4;
+
+  --color-fire-500: #ff4b4b;
+  --color-fire-600: #e13b3b;
+
+  --color-bee-500: #ffc800;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background:
+    radial-gradient(90rem 50rem at 15% -10%, rgba(28, 176, 246, 0.14), transparent 55%),
+    radial-gradient(70rem 45rem at 90% 0%, rgba(88, 204, 2, 0.12), transparent 55%),
+    var(--color-ink-950);
+  color: var(--color-ink-200);
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Focus ring that stays visible against the dark background. */
+:focus-visible {
+  outline: 2px solid var(--color-macaw-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
