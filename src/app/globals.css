@@ -1,26 +1,32 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink-950: #0b1020;
-  --color-ink-900: #111827;
-  --color-ink-800: #1b2436;
-  --color-ink-700: #2a3550;
-  --color-ink-400: #8a97b1;
-  --color-ink-200: #d8dfec;
+  /* Neutral greys rather than blue-tinted navy. Navy plus neon reads as a template;
+     a near-achromatic surface lets the one accent colour carry actual meaning. */
+  --color-ink-950: #0a0a0b;
+  --color-ink-900: #101012;
+  --color-ink-800: #17171a;
+  --color-ink-700: #26262b;
+  --color-ink-600: #3a3a42;
+  --color-ink-400: #8b8b94;
+  --color-ink-300: #b4b4bc;
+  --color-ink-200: #e9e9ec;
 
-  --color-grass-500: #58cc02;
-  --color-grass-600: #46a302;
-  --color-grass-300: #9ae66e;
+  /* Accent. Reserved for primary actions and healthy state — not decoration. */
+  --color-grass-500: #4ea72e;
+  --color-grass-600: #3d8524;
+  --color-grass-300: #86d15f;
 
-  --color-macaw-500: #1cb0f6;
-  --color-macaw-600: #1497d4;
+  --color-macaw-500: #4a8fd4;
+  --color-macaw-600: #3a73ad;
 
-  --color-fire-500: #ff4b4b;
-  --color-fire-600: #e13b3b;
+  --color-fire-500: #e5484d;
+  --color-fire-600: #c22e33;
 
-  --color-bee-500: #ffc800;
+  --color-bee-500: #d79c2b;
 
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-jetbrains), ui-monospace, monospace;
 }
 
 html {
@@ -28,16 +34,20 @@ html {
 }
 
 body {
-  background:
-    radial-gradient(90rem 50rem at 15% -10%, rgba(28, 176, 246, 0.14), transparent 55%),
-    radial-gradient(70rem 45rem at 90% 0%, rgba(88, 204, 2, 0.12), transparent 55%),
-    var(--color-ink-950);
+  /* Flat. No radial gradient wash. */
+  background: var(--color-ink-950);
   color: var(--color-ink-200);
   min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Focus ring that stays visible against the dark background. */
+/* Inter's default figures are proportional; tabular is what you want for any
+   number that sits in a column or updates in place. */
+.nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
 :focus-visible {
   outline: 2px solid var(--color-macaw-500);
   outline-offset: 2px;

@@ -11,9 +11,9 @@ const KIND_LABELS: Record<Exercise["kind"], string> = {
 /** Compact, reviewable rendering of a drafted exercise for the author. */
 export function ExercisePreview({ exercise, index }: { exercise: Exercise; index: number }) {
   return (
-    <li className="rounded-xl border border-ink-700/60 bg-ink-800/40 p-4">
+    <li className="rounded-md border border-ink-700/60 bg-ink-800/40 p-4">
       <div className="flex items-start justify-between gap-3">
-        <span className="text-xs font-bold text-ink-400">#{index + 1}</span>
+        <span className="text-xs font-semibold text-ink-400">#{index + 1}</span>
         <Badge tone="neutral">{KIND_LABELS[exercise.kind]}</Badge>
       </div>
 
@@ -22,7 +22,7 @@ export function ExercisePreview({ exercise, index }: { exercise: Exercise; index
       {exercise.kind === "coordinate_plot" ? (
         <p className="mt-2 text-xs text-ink-400">
           Target{" "}
-          <span className="font-semibold tabular-nums text-grass-300">
+          <span className="font-semibold nums text-grass-300">
             ({exercise.target.x}, {exercise.target.y})
           </span>{" "}
           on a ±{exercise.gridRange} grid, tolerance {exercise.tolerance}
@@ -33,7 +33,7 @@ export function ExercisePreview({ exercise, index }: { exercise: Exercise; index
         <>
           <p className="mt-2 text-xs text-ink-400">
             Shows{" "}
-            <span className="font-semibold tabular-nums text-ink-200">
+            <span className="font-semibold nums text-ink-200">
               ({exercise.shown.x}, {exercise.shown.y})
             </span>{" "}
             on a ±{exercise.gridRange} grid

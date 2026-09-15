@@ -69,7 +69,7 @@ export default function DemoPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">Try a lesson</h1>
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Try a lesson</h1>
         <p className="mt-2 max-w-2xl text-sm text-ink-400">
           The real learner player, running on fixed sample content. No database, no API key, and
           nothing recorded. The coordinate plane works with a tap or with arrow keys and Enter.
@@ -100,7 +100,7 @@ export default function DemoPage() {
       </Card>
 
       {!isMath ? (
-        <p className="rounded-xl border border-macaw-600/40 bg-macaw-500/10 px-4 py-3 text-sm text-macaw-500">
+        <p className="rounded-md border border-macaw-600/40 bg-macaw-500/10 px-4 py-3 text-sm text-macaw-500">
           In the full platform this audio is generated with OpenAI TTS at authoring time and served
           from blob storage. Here there is no hosted clip, so the player falls back to your
           browser&apos;s Spanish voice — the same fallback that protects a learner when a clip

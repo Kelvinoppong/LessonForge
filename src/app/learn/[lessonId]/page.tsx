@@ -102,7 +102,7 @@ export default function LearnPage() {
     return (
       <div className="mx-auto max-w-2xl animate-pulse space-y-4">
         <div className="h-2.5 rounded-full bg-ink-800" />
-        <div className="h-64 rounded-2xl bg-ink-900/70" />
+        <div className="h-64 rounded-lg bg-ink-900/70" />
       </div>
     );
   }

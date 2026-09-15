@@ -99,14 +99,14 @@ export function ExercisePlayer({
   if (done) {
     const pct = Math.round((correctCount / exercises.length) * 100);
     return (
-      <div className="mx-auto max-w-lg rounded-2xl border border-ink-700/60 bg-ink-900/70 p-8 text-center">
+      <div className="mx-auto max-w-lg rounded-lg border border-ink-700/60 bg-ink-900/70 p-8 text-center">
         <div aria-hidden className="text-5xl">
           {pct >= 80 ? "🎉" : pct >= 50 ? "👍" : "📚"}
         </div>
-        <h2 className="mt-4 text-2xl font-extrabold">Lesson complete</h2>
+        <h2 className="mt-4 text-2xl font-semibold">Lesson complete</h2>
         <p className="mt-2 text-ink-400">
           You got{" "}
-          <span className="font-bold text-ink-200">
+          <span className="font-semibold text-ink-200">
             {correctCount} of {exercises.length}
           </span>{" "}
           correct.
@@ -135,7 +135,7 @@ export function ExercisePlayer({
           <span className="font-semibold text-ink-400">{lessonTitle}</span>
           <span className="flex items-center gap-2">
             <Badge tone="info">{variantLabel}</Badge>
-            <span className="tabular-nums text-ink-400">
+            <span className="nums text-ink-400">
               {index + 1} / {exercises.length}
             </span>
           </span>
@@ -154,8 +154,8 @@ export function ExercisePlayer({
         </div>
       </div>
 
-      <div className="rounded-2xl border border-ink-700/60 bg-ink-900/70 p-5 sm:p-7">
-        <h2 className="text-lg font-bold sm:text-xl">{exercise.prompt}</h2>
+      <div className="rounded-lg border border-ink-700/60 bg-ink-900/70 p-5 sm:p-7">
+        <h2 className="text-lg font-semibold sm:text-xl">{exercise.prompt}</h2>
 
         <div className="mt-6">
           {exercise.kind === "coordinate_plot" ? (
@@ -233,13 +233,13 @@ export function ExercisePlayer({
         {graded !== null ? (
           <div
             role="status"
-            className={`mt-6 rounded-xl border px-4 py-3 text-sm ${
+            className={`mt-6 rounded-md border px-4 py-3 text-sm ${
               graded
                 ? "border-grass-600/40 bg-grass-500/10 text-grass-300"
                 : "border-fire-600/40 bg-fire-500/10 text-fire-500"
             }`}
           >
-            <p className="font-bold">{graded ? "Correct" : "Not quite"}</p>
+            <p className="font-semibold">{graded ? "Correct" : "Not quite"}</p>
             {!graded && exercise.kind === "listening_type" ? (
               <p className="mt-1 text-ink-200">
                 Expected: <span className="font-semibold">{exercise.accepted[0]}</span>
@@ -311,7 +311,7 @@ function ChoiceGrid({
             disabled={graded !== null}
             aria-pressed={isSelected}
             onClick={() => onSelect(i)}
-            className={`rounded-xl border px-4 py-3 text-left text-sm font-semibold transition disabled:cursor-default ${tone}`}
+            className={`rounded-md border px-4 py-3 text-left text-sm font-semibold transition disabled:cursor-default ${tone}`}
           >
             {choice}
           </button>

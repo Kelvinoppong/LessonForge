@@ -134,7 +134,7 @@ export default function OpsPage() {
     <div className="space-y-8">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
             Reliability & experiments
           </h1>
           <p className="mt-2 max-w-2xl text-sm text-ink-400">
@@ -156,7 +156,7 @@ export default function OpsPage() {
       {notice ? (
         <div
           role="status"
-          className={`rounded-xl border px-4 py-3 text-sm ${
+          className={`rounded-md border px-4 py-3 text-sm ${
             notice.tone === "good"
               ? "border-grass-600/40 bg-grass-500/10 text-grass-300"
               : "border-fire-600/40 bg-fire-500/10 text-fire-500"
@@ -169,7 +169,7 @@ export default function OpsPage() {
       <NewExperiment lessons={lessons} onCreated={load} onError={setNotice} />
 
       {data === null ? (
-        <div className="h-48 animate-pulse rounded-2xl bg-ink-900/70" />
+        <div className="h-48 animate-pulse rounded-lg bg-ink-900/70" />
       ) : data.experiments.length === 0 ? (
         <EmptyState
           title="No experiments yet"
@@ -195,7 +195,7 @@ export default function OpsPage() {
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <h2 className="font-bold">{experiment.name}</h2>
+                      <h2 className="font-semibold">{experiment.name}</h2>
                       <Badge
                         tone={
                           experiment.status === "running"
@@ -241,7 +241,7 @@ export default function OpsPage() {
                 </div>
 
                 {experiment.haltReason ? (
-                  <p className="mt-4 rounded-xl border border-fire-600/40 bg-fire-500/10 px-4 py-3 text-sm text-fire-500">
+                  <p className="mt-4 rounded-md border border-fire-600/40 bg-fire-500/10 px-4 py-3 text-sm text-fire-500">
                     {experiment.haltReason}
                   </p>
                 ) : null}
@@ -317,7 +317,7 @@ export default function OpsPage() {
 
       {chartData.length > 0 ? (
         <Card className="p-5 sm:p-6">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-ink-400">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-ink-400">
             Answer error rate by variant
           </h2>
           <div className="mt-4 h-72 w-full">
@@ -364,7 +364,7 @@ export default function OpsPage() {
 
       {data?.recentChecks.length ? (
         <Card className="p-5 sm:p-6">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-ink-400">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-ink-400">
             Guardrail evaluation log
           </h2>
           <ul className="mt-4 divide-y divide-ink-700/50">
@@ -453,7 +453,7 @@ function NewExperiment({
 
   return (
     <Card className="p-5 sm:p-6">
-      <h2 className="text-sm font-bold uppercase tracking-wider text-ink-400">New experiment</h2>
+      <h2 className="text-sm font-semibold uppercase tracking-wider text-ink-400">New experiment</h2>
       <form onSubmit={submit} className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <select
           required

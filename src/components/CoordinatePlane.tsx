@@ -111,7 +111,7 @@ export function CoordinatePlane({
         tabIndex={mode === "plot" && !disabled ? 0 : -1}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
-        className={`mx-auto block h-auto w-full max-w-lg touch-manipulation rounded-2xl border border-ink-700/60 bg-ink-950/60 ${
+        className={`mx-auto block h-auto w-full max-w-lg touch-manipulation rounded-md border border-ink-700/60 bg-ink-950/60 ${
           mode === "plot" && !disabled ? "cursor-crosshair" : ""
         }`}
       >
@@ -124,7 +124,7 @@ export function CoordinatePlane({
               x2={toSvgX(t)}
               y2={SIZE - PAD}
               stroke="currentColor"
-              className={t === 0 ? "text-ink-400" : "text-ink-700/50"}
+              className={t === 0 ? "text-ink-400" : "text-ink-700"}
               strokeWidth={t === 0 ? 1.6 : 0.7}
             />
             <line
@@ -133,7 +133,7 @@ export function CoordinatePlane({
               x2={SIZE - PAD}
               y2={toSvgY(t)}
               stroke="currentColor"
-              className={t === 0 ? "text-ink-400" : "text-ink-700/50"}
+              className={t === 0 ? "text-ink-400" : "text-ink-700"}
               strokeWidth={t === 0 ? 1.6 : 0.7}
             />
           </g>
@@ -244,7 +244,7 @@ export function CoordinatePlane({
       {mode === "plot" && !disabled ? (
         <p className="mt-2 text-center text-xs text-ink-400">
           Tap the grid, or use arrow keys and press Enter. Cursor:{" "}
-          <span className="font-semibold tabular-nums text-ink-200">
+          <span className="font-medium nums text-ink-200">
             ({cursor.x}, {cursor.y})
           </span>
         </p>

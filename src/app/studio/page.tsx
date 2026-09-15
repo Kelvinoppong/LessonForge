@@ -65,7 +65,7 @@ export default function StudioPage() {
   return (
     <div className="space-y-8">
       <header>
-        <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">Authoring studio</h1>
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Authoring studio</h1>
         <p className="mt-2 max-w-2xl text-sm text-ink-400">
           Describe the lesson you want in plain language. The content service drafts
           exercises, you review them, and only accepted drafts become variants that
@@ -74,7 +74,7 @@ export default function StudioPage() {
       </header>
 
       <Card className="p-5 sm:p-6">
-        <h2 className="text-sm font-bold uppercase tracking-wider text-ink-400">New lesson</h2>
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-ink-400">New lesson</h2>
         <form onSubmit={createLesson} className="mt-4 grid gap-3 sm:grid-cols-[2fr_1fr_1.5fr_auto]">
           <input
             required
@@ -116,7 +116,7 @@ export default function StudioPage() {
       </Card>
 
       {error ? (
-        <div className="rounded-xl border border-fire-600/40 bg-fire-500/10 px-4 py-3 text-sm text-fire-500">
+        <div className="rounded-md border border-fire-600/40 bg-fire-500/10 px-4 py-3 text-sm text-fire-500">
           {error}
         </div>
       ) : null}
@@ -124,7 +124,7 @@ export default function StudioPage() {
       {lessons === null ? (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {[0, 1, 2].map((i) => (
-            <div key={i} className="h-32 animate-pulse rounded-2xl bg-ink-900/70" />
+            <div key={i} className="h-32 animate-pulse rounded-lg bg-ink-900/70" />
           ))}
         </div>
       ) : lessons.length === 0 ? (
@@ -145,7 +145,7 @@ export default function StudioPage() {
                 </Badge>
               </div>
 
-              <h3 className="mt-3 font-bold leading-snug">{lesson.title}</h3>
+              <h3 className="mt-3 font-semibold leading-snug">{lesson.title}</h3>
               <p className="mt-1 text-xs text-ink-400">{lesson.skill}</p>
 
               <p className="mt-3 text-xs text-ink-400">

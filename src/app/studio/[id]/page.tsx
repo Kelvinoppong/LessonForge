@@ -141,7 +141,7 @@ export default function AuthoringPage() {
   };
 
   if (!lesson) {
-    return <div className="h-64 animate-pulse rounded-2xl bg-ink-900/70" />;
+    return <div className="h-64 animate-pulse rounded-lg bg-ink-900/70" />;
   }
 
   return (
@@ -151,7 +151,7 @@ export default function AuthoringPage() {
           <Link href="/studio" className={buttonStyles.ghost}>
             ← Studio
           </Link>
-          <h1 className="mt-1 text-2xl font-extrabold tracking-tight">{lesson.title}</h1>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight">{lesson.title}</h1>
           <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-ink-400">
             <Badge tone={lesson.course === "math" ? "info" : "good"}>
               {lesson.course === "math" ? "Math" : "Spanish"}
@@ -180,7 +180,7 @@ export default function AuthoringPage() {
       {notice ? (
         <div
           role="status"
-          className={`rounded-xl border px-4 py-3 text-sm ${
+          className={`rounded-md border px-4 py-3 text-sm ${
             notice.tone === "good"
               ? "border-grass-600/40 bg-grass-500/10 text-grass-300"
               : "border-fire-600/40 bg-fire-500/10 text-fire-500"
@@ -193,7 +193,7 @@ export default function AuthoringPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         {/* ---- authoring conversation ---- */}
         <Card className="flex max-h-[36rem] flex-col p-5">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-ink-400">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-ink-400">
             Draft with AI
           </h2>
 
@@ -211,7 +211,7 @@ export default function AuthoringPage() {
               messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`rounded-xl px-3.5 py-2.5 text-sm ${
+                  className={`rounded-md px-3.5 py-2.5 text-sm ${
                     message.role === "user"
                       ? "ml-6 bg-macaw-500/10 text-ink-200"
                       : message.role === "system"
@@ -219,7 +219,7 @@ export default function AuthoringPage() {
                         : "mr-6 bg-ink-800/60 text-ink-200"
                   }`}
                 >
-                  <div className="mb-1 text-[10px] font-bold uppercase tracking-wider text-ink-400">
+                  <div className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-ink-400">
                     {message.role === "user" ? "You" : message.role === "system" ? "Error" : "AI"}
                   </div>
                   {message.content}
@@ -262,7 +262,7 @@ export default function AuthoringPage() {
         {/* ---- review canvas ---- */}
         <Card className="flex max-h-[36rem] flex-col p-5">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-ink-400">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-ink-400">
               Review canvas
             </h2>
             {canvas ? <Badge tone="warn">{canvas.length} drafted</Badge> : null}
@@ -309,7 +309,7 @@ export default function AuthoringPage() {
 
       {/* ---- variants ---- */}
       <Card className="p-5">
-        <h2 className="text-sm font-bold uppercase tracking-wider text-ink-400">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-ink-400">
           Variants ({variants.length})
         </h2>
 
@@ -322,10 +322,10 @@ export default function AuthoringPage() {
             {variants.map((variant) => (
               <li
                 key={variant.id}
-                className="rounded-xl border border-ink-700/60 bg-ink-800/40 p-4"
+                className="rounded-md border border-ink-700/60 bg-ink-800/40 p-4"
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="font-bold">{variant.label}</span>
+                  <span className="font-semibold">{variant.label}</span>
                   {variant.isControl ? <Badge tone="info">control</Badge> : null}
                   <Badge tone={variant.status === "halted" ? "bad" : "good"}>
                     {variant.status}
